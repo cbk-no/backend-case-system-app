@@ -1,0 +1,72 @@
+## Build artifacts
+bin/
+obj/
+out/
+publish/
+
+## User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Visual Studio Code
+.vscode/
+.history/
+
+## Visual Studio
+*.vs/
+.vs/
+
+## Logs
+*.log
+logs/
+
+## Environment variables
+.env
+*.env.local
+*.env.development
+*.env.production
+
+## Docker
+docker-compose.override.yml
+docker-data/
+postgres_data/
+**/postgres_data/
+
+## EF Core
+Migrations/
+*.db
+*.sqlite
+
+## OS generated files
+.DS_Store
+Thumbs.db
+
+## NuGet
+*.nupkg
+packages/
+.nuget/
+
+## Rider / JetBrains
+.idea/
+*.iml
+
+## Temporary files
+*.tmp
+*.temp
+*.bak
+
+## Publish profiles
+Properties/PublishProfiles/
+
+## Secrets
+secrets.json
+appsettings.Development.json
+appsettings.Local.json
+appsettings.*.local.json
+
+## Node (if frontend exists)
+node_modules/
+npm-debug.log
+yarn-error.log
