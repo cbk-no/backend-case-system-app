@@ -8,44 +8,57 @@ public class AppDbContext : DbContext
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
     public DbSet<User> Users => Set<User>();
-    public DbSet<Project> Projects => Set<Project>();
-    public DbSet<CaseItem> Tasks => Set<CaseItem>();
+    public DbSet<TaskItem> Tasks => Set<TaskItem>();
+    public DbSet<Case> Cases => Set<Case>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<User>(e =>
+        base.OnModelCreating(modelBuilder);
+
+        // User
+        modelBuilder.Entity<User>(entity =>
         {
-            e.HasKey(x => x.Id);
-            e.Property(x => x.Name).IsRequired().HasMaxLength(100);
-            e.Property(x => x.Email).IsRequired().HasMaxLength(200);
-            e.HasIndex(x => x.Email).IsUnique();
+            entity.HasKey(u => u.Id);
+            entity.Property(u => u.Name).IsRequired().HasMaxLength(200);
+            entity.Property(u => u.Role).IsRequired().HasMaxLength(100);
+            entity.Property(u => u.Email).IsRequired().HasMaxLength(200);
         });
 
-        modelBuilder.Entity<Project>(e =>
+        // Case
+        modelBuilder.Entity<Case>(entity =>
         {
-            e.HasKey(x => x.Id);
-            e.Property(x => x.Name).IsRequired().HasMaxLength(200);
+            entity.HasKey(c => c.Id);
 
-            e.HasOne(x => x.Owner)
-             .WithMany(u => u.Projects)
-             .HasForeignKey(x => x.OwnerId)
-             .OnDelete(DeleteBehavior.Restrict);
+            entity.Property(c => c.ComplaintDescription).IsRequired();
+            entity.Property(c => c.Priority).IsRequired();
+            entity.Property(c => c.Status).IsRequired();
+            entity.Property(c => c.Description).IsRequired();
+            entity.Property(c => c.EmailComplainer).IsRequired();
+            entity.Property(c => c.UserInfoComplainer).IsRequired();
+
+            entity.HasOne(c => c.CaseOwner)
+                  .WithMany(u => u.OwnedCases)
+                  .HasForeignKey(c => c.CaseOwnerId)
+                  .OnDelete(DeleteBehavior.Restrict);
         });
 
-        modelBuilder.Entity<CaseItem>(e =>
+        // TaskItem
+        modelBuilder.Entity<TaskItem>(entity =>
         {
-            e.HasKey(x => x.Id);
-            e.Property(x => x.Title).IsRequired().HasMaxLength(200);
+            entity.HasKey(t => t.Id);
 
-            e.HasOne(x => x.Project)
-             .WithMany(p => p.Tasks)
-             .HasForeignKey(x => x.ProjectId)
-             .OnDelete(DeleteBehavior.Cascade);
+            entity.Property(t => t.Description).IsRequired();
+            entity.Property(t => t.Status).IsRequired();
 
-            e.HasOne(x => x.AssignedUser)
-             .WithMany(u => u.AssignedTasks)
-             .HasForeignKey(x => x.AssignedUserId)
-             .OnDelete(DeleteBehavior.SetNull);
+            entity.HasOne(t => t.AssignedUser)
+                  .WithMany(u => u.AssignedTasks)
+                  .HasForeignKey(t => t.AssignedUserId)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(t => t.Case)
+                  .WithMany(c => c.Tasks)
+                  .HasForeignKey(t => t.CaseId)
+                  .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

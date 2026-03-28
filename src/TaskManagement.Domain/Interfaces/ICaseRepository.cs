@@ -2,7 +2,6 @@ using TaskManagement.Domain.Entities;
 
 namespace TaskManagement.Domain.Interfaces;
 
-public interface ICaseRepository : IRepository<CaseItem>
+public interface ICaseRepository : IRepository<Case>
 {
-    Task<IReadOnlyList<CaseItem>> GetByProjectIdAsync(Guid projectId, CancellationToken ct = default);
 }

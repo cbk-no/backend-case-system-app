@@ -8,8 +8,13 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
+        CreateMap<Case, CaseDto>();
+        CreateMap<CreateCaseRequest, Case>();
+
+        CreateMap<TaskItem, TaskDto>();
+        CreateMap<CreateTaskRequest, TaskItem>();
+
         CreateMap<User, UserDto>();
-        CreateMap<Project, ProjectDto>();
-        CreateMap<CaseItem, CaseDto>();
+        CreateMap<CreateUserRequest, User>();
     }
 }

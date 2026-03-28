@@ -28,12 +28,12 @@ services.AddValidatorsFromAssemblyContaining<CreateUserRequestValidator>();
 
 // Repositories
 services.AddScoped<IUserRepository, UserRepository>();
-services.AddScoped<IProjectRepository, ProjectRepository>();
-services.AddScoped<ICaseRepository, TaskRepository>();
+services.AddScoped<ITaskRepository, TaskRepository>();
+services.AddScoped<ICaseRepository, CaseRepository>();
 
 // Services
 services.AddScoped<IUserService, UserService>();
-services.AddScoped<IProjectService, ProjectService>();
+services.AddScoped<ITaskService, TaskService>();
 services.AddScoped<ICaseService, CaseService>();
 
 // Controllers & Swagger

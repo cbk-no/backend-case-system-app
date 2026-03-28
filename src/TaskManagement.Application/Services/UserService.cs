@@ -1,8 +1,8 @@
 using AutoMapper;
 using TaskManagement.Application.DTOs;
-using TaskManagement.Application.Interfaces;
 using TaskManagement.Domain.Entities;
 using TaskManagement.Domain.Interfaces;
+using TaskManagement.Application.Interfaces;
 
 namespace TaskManagement.Application.Services;
 
@@ -19,21 +19,15 @@ public class UserService : IUserService
 
     public async Task<UserDto> CreateAsync(CreateUserRequest request, CancellationToken ct = default)
     {
-        var user = new User
-        {
-            Id = Guid.NewGuid(),
-            Name = request.Name,
-            Email = request.Email
-        };
-
-        await _repo.AddAsync(user, ct);
-        return _mapper.Map<UserDto>(user);
+        var entity = _mapper.Map<User>(request);
+        await _repo.AddAsync(entity, ct);
+        return _mapper.Map<UserDto>(entity);
     }
 
     public async Task<UserDto?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
-        var user = await _repo.GetByIdAsync(id, ct);
-        return user is null ? null : _mapper.Map<UserDto>(user);
+        var entity = await _repo.GetByIdAsync(id, ct);
+        return entity is null ? null : _mapper.Map<UserDto>(entity);
     }
 
     public async Task<IReadOnlyList<UserDto>> GetAllAsync(CancellationToken ct = default)
@@ -44,22 +38,18 @@ public class UserService : IUserService
 
     public async Task<UserDto?> UpdateAsync(Guid id, UpdateUserRequest request, CancellationToken ct = default)
     {
-        var user = await _repo.GetByIdAsync(id, ct);
-        if (user is null) return null;
-
-        user.Name = request.Name;
-        user.Email = request.Email;
-
-        await _repo.UpdateAsync(user, ct);
-        return _mapper.Map<UserDto>(user);
+        var entity = await _repo.GetByIdAsync(id, ct);
+        if (entity is null) return null;
+        _mapper.Map(request, entity);
+        await _repo.UpdateAsync(entity, ct);
+        return _mapper.Map<UserDto>(entity);
     }
 
     public async Task<bool> DeleteAsync(Guid id, CancellationToken ct = default)
     {
-        var user = await _repo.GetByIdAsync(id, ct);
-        if (user is null) return false;
-
-        await _repo.DeleteAsync(user, ct);
+        var entity = await _repo.GetByIdAsync(id, ct);
+        if (entity is null) return false;
+        await _repo.DeleteAsync(entity, ct);
         return true;
     }
 }

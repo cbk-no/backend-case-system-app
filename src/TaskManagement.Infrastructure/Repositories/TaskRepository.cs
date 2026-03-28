@@ -5,7 +5,7 @@ using TaskManagement.Infrastructure.Persistence;
 
 namespace TaskManagement.Infrastructure.Repositories;
 
-public class UserRepository : Repository<User>, IUserRepository
+public class TaskRepository : Repository<TaskItem>, ITaskRepository
 {
-    public UserRepository(AppDbContext context) : base(context) { }
+    public TaskRepository(AppDbContext context) : base(context) { }
 }

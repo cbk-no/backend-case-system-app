@@ -4,23 +4,39 @@ namespace TaskManagement.Application.DTOs;
 
 public record CaseDto(
     Guid Id,
-    string Title,
-    string? Description,
-    CaseStatus Status,
-    Guid ProjectId,
-    Guid? AssignedUserId);
+    DateTime DateReceived,
+    DateTime Deadline,
+    string ComplaintDescription,
+    string Priority,
+    string Status,
+    string Description,
+    string EmailComplainer,
+    string UserInfoComplainer,
+    Guid CaseOwnerId
+);
 
 public record CreateCaseRequest(
-    string Title,
-    string? Description,
-    CaseStatus Status,
-    Guid ProjectId,
-    Guid? AssignedUserId);
+    DateTime DateReceived,
+    DateTime Deadline,
+    string ComplaintDescription,
+    string Priority,
+    string Status,
+    string Description,
+    string EmailComplainer,
+    string UserInfoComplainer,
+    Guid CaseOwnerId
+);
 
 public record UpdateCaseRequest(
-    string Title,
-    string? Description,
-    CaseStatus Status,
-    Guid? AssignedUserId);
+    DateTime DateReceived,
+    DateTime Deadline,
+    string ComplaintDescription,
+    string Priority,
+    string Status,
+    string Description,
+    string EmailComplainer,
+    string UserInfoComplainer,
+    Guid CaseOwnerId
+);
 
 public record AssignCaseRequest(Guid UserId);
