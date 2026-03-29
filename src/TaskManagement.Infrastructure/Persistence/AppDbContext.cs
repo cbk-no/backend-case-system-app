@@ -28,7 +28,10 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Case>(entity =>
         {
             entity.HasKey(c => c.Id);
-
+            entity.Property(c => c.DateReceived).IsRequired();
+            entity.Property(c => c.Deadline).IsRequired();
+            entity.Property(c => c.Title).IsRequired().HasMaxLength(200);
+            entity.Property(c => c.Type).IsRequired();
             entity.Property(c => c.ComplaintDescription).IsRequired();
             entity.Property(c => c.Priority).IsRequired();
             entity.Property(c => c.Status).IsRequired();

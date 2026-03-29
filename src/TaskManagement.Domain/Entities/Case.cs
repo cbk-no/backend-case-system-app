@@ -2,9 +2,9 @@ namespace TaskManagement.Domain.Entities;
 
 public enum CaseStatus
 {
-    Todo,
+    Open,
     InProgress,
-    Done
+    Closed
 }
 
 public enum CasePriority
@@ -13,12 +13,20 @@ public enum CasePriority
     Medium,
     High
 }
+public enum CaseType
+{
+    Complaint,
+    Inquiry,
+    Request
+}
 
 public class Case
 {
     public Guid Id { get; set; }
     public DateTime DateReceived { get; set; }
     public DateTime Deadline { get; set; }
+    public string Title { get; set; } = default!;
+    public CaseType Type { get; set; }
     public string ComplaintDescription { get; set; } = default!;
     public CasePriority Priority { get; set; }
     public CaseStatus Status { get; set; }

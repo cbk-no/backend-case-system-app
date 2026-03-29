@@ -6,6 +6,8 @@ public record CaseDto(
     Guid Id,
     DateTime DateReceived,
     DateTime Deadline,
+    string Title,
+    string Type,
     string ComplaintDescription,
     string Priority,
     string Status,
@@ -18,6 +20,8 @@ public record CaseDto(
 public record CreateCaseRequest(
     DateTime DateReceived,
     DateTime Deadline,
+    string Title,
+    string Type,
     string ComplaintDescription,
     string Priority,
     string Status,
@@ -30,6 +34,8 @@ public record CreateCaseRequest(
 public record UpdateCaseRequest(
     DateTime DateReceived,
     DateTime Deadline,
+    string Title,
+    string Type,
     string ComplaintDescription,
     string Priority,
     string Status,

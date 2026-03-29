@@ -1,6 +1,6 @@
 namespace TaskManagement.Domain.Entities;
 
-public enum TaskStatus
+public enum CurrentStatus
 {
     Todo,
     InProgress,
@@ -11,7 +11,7 @@ public class TaskItem
     public Guid Id { get; set; }
     public Guid AssignedUserId { get; set; }
     public string Description { get; set; } = default!;
-    public TaskStatus Status { get; set; } = default!;
+    public CurrentStatus Status { get; set; } = default!;
     public Guid CaseId { get; set; }
 
     // Navigation

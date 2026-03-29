@@ -9,11 +9,26 @@ using TaskManagement.Application.Validation;
 using TaskManagement.Domain.Interfaces;
 using TaskManagement.Infrastructure.Persistence;
 using TaskManagement.Infrastructure.Repositories;
+using TaskManagement.Infrastructure.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var services = builder.Services;
 var configuration = builder.Configuration;
+// CORS
+var allowedOrigins = configuration["ALLOWED_ORIGINS"]?
+    .Split(";", StringSplitOptions.RemoveEmptyEntries)
+    ?? new[] { "http://localhost:4040" };
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("DefaultCorsPolicy", policy =>
+    {
+        policy.WithOrigins(allowedOrigins!)
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
 // DbContext (PostgreSQL)
 services.AddDbContext<AppDbContext>(options =>
@@ -46,7 +61,9 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await DatabaseInitializer.WaitForDatabaseAsync(db);
     db.Database.Migrate();
+    await DatabaseSeeder.SeedAsync(db);
 }
 
 // Global exception handling
@@ -59,6 +76,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("DefaultCorsPolicy");
 
 app.MapControllers();
 

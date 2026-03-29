@@ -10,6 +10,8 @@ public class CreateCaseValidator : AbstractValidator<CreateCaseRequest>
         RuleFor(x => x.ComplaintDescription).NotEmpty();
         RuleFor(x => x.Priority).NotEmpty();
         RuleFor(x => x.Status).NotEmpty();
+        RuleFor(x => x.Title).NotEmpty();
+        RuleFor(x => x.Type).NotEmpty();
         RuleFor(x => x.Description).NotEmpty();
         RuleFor(x => x.EmailComplainer).NotEmpty().EmailAddress();
         RuleFor(x => x.UserInfoComplainer).NotEmpty();
