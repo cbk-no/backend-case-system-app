@@ -27,7 +27,6 @@ public class Repository<T> : IRepository<T> where T : class
 
     public async Task UpdateAsync(T entity, CancellationToken ct = default)
     {
-        _context.Set<T>().Update(entity);
         await _context.SaveChangesAsync();
     }
 

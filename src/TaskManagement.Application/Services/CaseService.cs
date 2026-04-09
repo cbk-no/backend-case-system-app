@@ -10,11 +10,13 @@ public class CaseService : ICaseService
 {
     private readonly ICaseRepository _repo;
     private readonly IMapper _mapper;
+    private readonly IUserRepository _userRepo;
 
-    public CaseService(ICaseRepository repo, IMapper mapper)
+    public CaseService(ICaseRepository repo, IMapper mapper, IUserRepository userRepo)
     {
         _repo = repo;
         _mapper = mapper;
+        _userRepo = userRepo;
     }
 
     public async Task<CaseDto> CreateAsync(CreateCaseRequest request, CancellationToken ct = default)
@@ -38,10 +40,24 @@ public class CaseService : ICaseService
 
     public async Task<CaseDto?> UpdateAsync(Guid id, UpdateCaseRequest request, CancellationToken ct = default)
     {
+        
         var entity = await _repo.GetByIdAsync(id, ct);
-        if (entity is null) return null;
+        Console.WriteLine($"Before save: entity = {System.Text.Json.JsonSerializer.Serialize(entity)}");
+        if (entity is null)
+            return null;
+
+        // ⭐ Merge only changed fields into the existing entity
         _mapper.Map(request, entity);
+        if (request.CaseOwnerId.HasValue && request.CaseOwnerId.Value != Guid.Empty)
+        {
+            var exists = await _userRepo.ExistsAsync(request.CaseOwnerId.Value, ct);
+            if (!exists)
+                throw new Exception("Invalid CaseOwnerId: user does not exist");
+            entity.CaseOwnerId = request.CaseOwnerId.Value;
+        }
+        Console.WriteLine($"Before save: CaseOwnerId = {entity.CaseOwnerId}");
         await _repo.UpdateAsync(entity, ct);
+
         return _mapper.Map<CaseDto>(entity);
     }
 
@@ -67,4 +83,6 @@ public class CaseService : ICaseService
         var all = await _repo.GetAllAsync(ct);
         return _mapper.Map<IReadOnlyList<CaseDto>>(all);
     }
+
+
 }

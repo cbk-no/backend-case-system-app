@@ -32,17 +32,18 @@ public record CreateCaseRequest(
 );
 
 public record UpdateCaseRequest(
-    DateTime DateReceived,
-    DateTime Deadline,
-    string Title,
-    string Type,
-    string ComplaintDescription,
-    string Priority,
-    string Status,
-    string Description,
-    string EmailComplainer,
-    string UserInfoComplainer,
-    Guid CaseOwnerId
+    DateTime? DateReceived,
+    DateTime? Deadline,
+    string? Title,
+    string? Type,
+    string? ComplaintDescription,
+    string? Priority,
+    string? Status,
+    string? Description,
+    string? EmailComplainer,
+    string? UserInfoComplainer,
+    Guid? CaseOwnerId
 );
+
 
 public record AssignCaseRequest(Guid UserId);
