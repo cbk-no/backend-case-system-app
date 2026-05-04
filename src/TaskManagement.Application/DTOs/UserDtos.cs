@@ -13,7 +13,7 @@ public record CreateUserRequest(
     string Email
 );
 public record UpdateUserRequest(
-    string Name,
-    string Role,
-    string Email
+    string? Name,
+    string? Role,
+    string? Email
 );
