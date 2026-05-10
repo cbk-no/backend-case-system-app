@@ -19,6 +19,15 @@ public class MappingProfile : Profile
                 opt.Condition((src, dest, srcValue) => srcValue != null));
         CreateMap<TaskItem, TaskDto>();
         CreateMap<CreateTaskRequest, TaskItem>();
+        CreateMap<UpdateTaskRequest, TaskItem>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.AssignedUser, opt => opt.Ignore())
+            .ForMember(dest => dest.Case, opt => opt.Ignore())
+            .ForMember(dest => dest.AssignedUserId, opt => opt.Ignore()) // handle manually
+            .ForMember(dest => dest.CaseId, opt => opt.Ignore()) 
+            .ForAllMembers(opt =>
+                opt.Condition((src, dest, srcValue) => srcValue != null));
+
 
         CreateMap<User, UserDto>();
         CreateMap<CreateUserRequest, User>();

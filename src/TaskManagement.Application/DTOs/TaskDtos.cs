@@ -15,8 +15,8 @@ public record CreateTaskRequest(
     Guid CaseId
 );
 public record UpdateTaskRequest(
-    Guid AssignedUserId,
-    string Description,
-    string Status,
-    Guid CaseId
+    Guid? AssignedUserId,
+    string? Description,
+    string? Status,
+    Guid? CaseId
 );

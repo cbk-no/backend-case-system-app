@@ -10,11 +10,15 @@ public class TaskService : ITaskService
 {
     private readonly ITaskRepository _repo;
     private readonly IMapper _mapper;
+    private readonly IUserRepository _userRepo;
+    private readonly ICaseRepository _caseRepo;
 
-    public TaskService(ITaskRepository repo, IMapper mapper)
+    public TaskService(ITaskRepository repo, IMapper mapper, IUserRepository userRepo, ICaseRepository caseRepo)
     {
         _repo = repo;
         _mapper = mapper;
+        _userRepo = userRepo;
+        _caseRepo = caseRepo;
     }
 
     public async Task<TaskDto> CreateAsync(CreateTaskRequest request, CancellationToken ct = default)
@@ -40,7 +44,33 @@ public class TaskService : ITaskService
     {
         var entity = await _repo.GetByIdAsync(id, ct);
         if (entity is null) return null;
+        Console.WriteLine($"Before save: entity = {System.Text.Json.JsonSerializer.Serialize(entity)}");
         _mapper.Map(request, entity);
+
+        // Status
+        if (!string.IsNullOrWhiteSpace(request.Status))
+        {
+            entity.Status = Enum.Parse<CurrentStatus>(request.Status, ignoreCase: true);
+        }
+
+        // AssignedUserId
+        if (request.AssignedUserId.HasValue && request.AssignedUserId.Value != Guid.Empty)
+        {
+            var exists = await _userRepo.ExistsAsync(request.AssignedUserId.Value, ct);
+            if (!exists)
+                throw new Exception("Invalid AssignedUserId: user does not exist");
+
+            entity.AssignedUserId = request.AssignedUserId.Value;
+        }
+        if (request.CaseId.HasValue && request.CaseId.Value != Guid.Empty)
+        {
+            var caseExists = await _caseRepo.ExistsAsync(request.CaseId.Value, ct);
+            if (!caseExists)
+                throw new Exception("Invalid CaseId: case does not exist");
+
+            entity.CaseId = request.CaseId.Value;
+        }
+
         await _repo.UpdateAsync(entity, ct);
         return _mapper.Map<TaskDto>(entity);
     }
